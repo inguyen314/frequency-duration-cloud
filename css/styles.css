@@ -1,0 +1,746 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100&display=swap');
+
+/* *{
+    font-family: "Poppins", sans-serif;
+} */
+
+:root 
+{
+    --background-body: #fff;
+    --background-color-1: darkblue;
+    --background-color-2: darkblue;
+    --background-color-3: #fff;
+    --border-color-1: #191919;
+    --border-color-2: #C6C6C6;
+    --background-info-table: #EDEDED;
+    --color-active: #74b3ff;
+    --body-width: 100%;
+    --body-width-before: 1074px; /* body width - 6px */
+    --shadow-box: 0px 5px 5px rgba(0, 0, 0, 0.2);
+    --font-color-1: #FFFFFF;
+    --font-color-2: #000;
+    --checkbox-border-color: #000;
+    --time-window-color: #afbbff;
+
+    --datrep-header-color: rgb(52, 58, 64);
+    --datrep-body-color: rgb(248, 249, 250);
+    --datrep-body-odd-color: rgb(233, 236, 239);
+    --loader-font-color: rgb(51, 51, 51);
+    --error-message: rgb(255, 155, 155);
+
+    --table-body-odd-color: rgb(228, 228, 228);
+    --table-body-even-color: rgb(248, 248, 248);
+}
+
+.page-content.blur {
+    filter: blur(20px);
+    pointer-events: none;
+}
+
+#content-body {
+    width: var(--body-width);
+    margin: auto;
+    font-size: 14px;
+    background: var(--background-body);
+    color: var(--font-color-2);
+}
+
+#content-body.dark {
+    --background-body: #525252;
+    --background-color-1: #191919;
+    --background-color-2: #000;
+    --background-color-3: #5f5f5f;
+    --border-color-1: #fff;
+    --border-color-2: #000;
+    --background-info-table: #000;
+    --color-active: #2276d6;
+    --body-width: 100%;
+    --body-width-before: 1074px; /* body width - 6px */
+    --shadow-box: 0px 5px 5px rgba(255, 255, 255, 0.2);
+    --font-color-1: #fff;
+    --font-color-2: #fff;
+    --checkbox-border-color: #fff;
+    --time-window-color: #cccccc;
+
+    --datrep-header-color: rgb(24, 27, 30);
+    --datrep-body-color: rgb(160, 161, 163);
+    --datrep-body-odd-color: rgb(107, 108, 109);
+    --loader-font-color: rgb(172, 172, 172);
+    --error-message: rgb(255, 50, 50);
+
+    --table-body-odd-color: rgb(155, 155, 155);
+    --table-body-even-color: rgb(218, 218, 218);
+}
+
+.header {
+    position: relative;
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    grid-template-areas: 
+    "title button";
+    background: var(--background-color-2);
+    box-shadow: var(--shadow-box);
+    margin: 3px;
+    padding-right: 100px;
+}
+
+.header h1 {
+    display: none;
+    grid-area: title;
+    font-size: 26px;
+    font-weight: bolder;
+    color: var(--font-color-2);
+    margin: 15px 0px 15px 340px;
+}
+
+.header label {
+    position: relative;
+    grid-area: button;
+    margin: 10px 0px 10px 150px;
+    width: 50px;
+    height: 25px;
+    background: #fff;
+    box-shadow: 0 0 0 2px var(--checkbox-border-color);
+    border-radius: 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header label input {
+    appearance: none;
+}
+
+.header label b {
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    border-radius: 15px;
+    transition: 0.5s;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.header label input:checked ~ b {
+    background: #2276d6;
+}
+
+.header label span {
+    z-index: 10;
+    position: absolute;
+    background: var(--checkbox-border-color);
+    width: 23px;
+    height: 23px;
+    top: 1px;
+    left: 1px;
+    border-radius: 50%;
+    transition: 0.5s;
+}
+
+.header label input:checked ~ span {
+    transform: translateX(25px);
+    transition: 0.5s;
+}
+
+.header label h4 {
+    position: absolute;
+    left: 60px;
+    text-wrap: nowrap;
+    color: #fff;    
+    font-size: 12px;
+}
+
+.container .input-container {
+    position: relative;
+    background-color: var(--background-color-3);
+    margin: 0px 3px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 15px 10px;
+}
+
+.container .input-container::before {
+    position: absolute;
+    content: '';
+    width: 100%;
+    height: 10px;
+    background-color: var(--background-color-2);
+
+}
+
+.container .data-info .basin,.gage,.data-type {
+    display: flex;
+    padding: 5px;
+    font-weight: bold;
+}
+
+.container .data-info .gage label{
+    padding-right: 3px;
+}
+
+.container .data-info select{
+    margin-left: 10px;
+    width: 315px;
+    cursor: pointer; 
+}
+
+.container .time-info {
+    display: flex;
+    justify-content: center;
+}
+
+.container .select-time {
+    display: flex;
+    justify-content: center;
+}
+
+.container #info-table {
+    background-color: var(--background-info-table);
+    padding: 5px 5px;
+    border: 2px solid var(--border-color-1);
+}
+
+.container #info-table th,#info-table td {
+    padding: 0px 20px;
+    border: 1px solid var(--border-color-1);
+}
+
+.container #info-table tbody tr:nth-child(1) {
+    font-style: italic;
+    font-weight: bolder;
+}
+
+.container #input-table {
+    background-color: var(--background-color-3);
+    border: 2px solid var(--background-color-1);
+    padding: 5px 5px;
+}
+
+.container #input-table tbody tr:nth-child(1){
+    font-style: italic;
+    font-weight: bolder;
+}
+
+.container #input-table th,#input-table td {
+    padding: 2px 10px;
+    border: 1px solid var(--border-color-2);
+}
+
+.container #input-table tbody tr:nth-child(1) td:nth-child(-n+2) {
+    padding: 0px 20px;
+}
+
+.container #input-table tbody tr:nth-child(2) td:nth-child(-n+2) {
+    background-color: var(--background-info-table);
+}
+
+.container #input-table input {
+    padding-left: 5px;
+    border: 1px solid var(--background-color-2);
+    border-radius: 5px;
+}
+
+.container #input-table select {
+    margin-left: 25px;
+    border: 1px solid var(--background-color-2);
+    border-radius: 5px;
+}
+
+.container .input-container{
+    position: relative;
+}
+
+.container .separator.hidden {
+    display: none;
+}
+
+.container .separator {
+    position: relative;
+    background-color: var(--background-color-2);
+    width: 100%;
+    height: 1em;
+}
+
+/* ======= SETTINGS DIV ===========*/
+
+#settings-div.hidden {
+    display: none;
+}
+
+#settings-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    margin-top: 1em;
+    box-shadow: var(--shadow-box);
+}
+
+/* ======== SET TITLE FONT ==========*/
+#settings-div .input-checkbox h3,
+#settings-div .select-data-plot h3,
+#settings-div .statistic-plot-control h3 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 1em;
+    color: var(--font-color-2);
+}
+ /* ======== CHECKBOX =========*/
+#settings-div .input-checkbox {
+    background-color: var(--background-color-3);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 1.5em;
+    gap: 5px;
+    font-weight: bold;
+}
+
+#settings-div .input-checkbox div {
+    display: flex;
+    gap: 1em;
+}
+
+#settings-div .input-checkbox input {
+    cursor: pointer;
+}
+
+#settings-div .input-checkbox input:checked {
+    accent-color: var(--color-active);
+}
+
+/* =============== BUTTONS ===============*/
+#buttons-div {
+    margin-top: 1em;
+    position: relative;
+    background: var(--background-color-2);
+    width: 100%;
+    height: 3em;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    padding: 0 1em;
+    box-shadow: var(--shadow-box);
+    gap: 1em;
+}
+
+#instruction-btn {
+    position: absolute;
+    left: 1em;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 7em;
+    height: 2em;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 0.5em;
+    font-size: 1em;
+}
+
+#buttons-div button:hover {
+    font-weight: bold;
+    color: #fff;
+    background: rgb(142, 142, 255);
+    padding-top: 0.2em;
+}
+
+#compute-html-btn,
+#compute-pdf-btn {
+    width: 10em;
+    height: 2em;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 0.5em;
+    font-size: 1em;
+}
+
+/* ============ CHECK BOX ================*/
+input[type="checkbox"] {
+    cursor: pointer;
+}
+
+/* ============= SETTINGS ================*/
+.input-checkbox.hidden {
+    display: none;
+}
+
+.input-checkbox {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+    padding: 1.5em;
+    margin-top: 0.5em;
+    box-shadow: var(--shadow-box);
+}
+
+.input-checkbox h2 {
+    font-size: 1.2em;
+    color: var(--font-color-2);
+}
+
+/* Group Interval */
+.input-checkbox .group-interval {
+    display: flex;
+    gap: 1em;
+}
+
+#group-interval-txbox {
+    width: 2.4em;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+/* Bound Control */
+.bound-control {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.bound-control .checkbox {
+    display: flex;
+    gap: 2em;
+}
+
+.bound-control .checkbox div {
+    display: flex;
+    gap: 0.5em;
+}
+
+.bound-control .bound-values.hidden {
+    display: none;
+}
+
+.bound-control .bound-values {
+    width: 30em;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5em;
+    border-radius: 1em;
+
+    background-color: var(--time-window-color);
+    color: black;
+    font-weight: bold;
+}
+
+.bound-control .bound-values div {
+    display: flex;
+    gap: 2em;
+}
+
+.bound-control .bound-values div input {
+    width: 3em;
+    text-align: center;
+}
+
+/* Data Exclusion */
+.data-exclusion {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.data-exclusion .checkbox {
+    display: flex;
+    gap: 2em;
+}
+
+.data-exclusion .checkbox div {
+    display: flex;
+    gap: 0.5em;
+}
+
+/* Time Window */
+.exclusion-settings.hidden {
+    display: none;
+}
+
+.exclusion-settings {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5em;
+    width: 100%;
+    background-color: var(--time-window-color);
+    border-radius: 1em;
+    font-weight: bold;
+    color: black;
+}
+
+.exclusion-settings .checkbox {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.exclusion-settings .single-month-day-only {
+    display: flex;
+    gap: 5em;
+}
+
+.exclusion-settings .single-month-day-only .month-day-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.exclusion-settings .single-month-day-only .single-month-day-input.hidden {
+    display: none;
+}
+
+.exclusion-settings .single-month-day-only .single-month-day-input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
+#single-month-day-txbox {
+    width: 6em;
+    text-align: center;
+}
+
+.exclusion-settings .specific-time-window-only {
+    display: flex;
+    gap: 5em;
+}
+
+.exclusion-settings .specific-time-window-only .specific-time-window-input.hidden {
+    display: none;
+}
+
+.exclusion-settings .specific-time-window-only .specific-time-window-input {
+    display: flex;
+}
+
+.exclusion-settings .specific-time-window-only .specific-time-window-input div {
+    display: flex;
+}
+
+.exclusion-settings .specific-time-window-only .specific-time-window-input div input {
+    width: 6em;
+    margin: 0em 1em 0em 0.5em;
+    text-align: center;
+}
+
+/* =========== SUB-SEPARATOR =============*/
+#settings-div .sub-separator.hidden {
+    display: none;
+}
+
+#settings-div .sub-separator {
+    display: block;
+    width: 98%;
+    height: 3px;
+    background-color: gray;
+}
+
+/* ========= SPACE BETWEEN ================*/
+
+#settings-div .space-between {
+    width: 100%;
+    height: 2em;
+}
+
+/* ========== INSTRUCTIONS ==============*/
+#instructions-div.hidden {
+    display: none;
+}
+
+#instructions-div {
+    margin: 1em 0em;
+    padding: 1em 2em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    font-size: 1em;
+    box-shadow: var(--shadow-box);
+}
+
+#instructions-div .title{
+    font-size: 1.5em;
+    color: var(--font-color-2);
+}
+
+#instructions-div ul li{
+    color: var(--font-color-2);
+    margin-top: 0.5em;
+}
+
+/* ========== ERROR MESSAGE =============*/
+#error-message.hidden {
+    display: none;
+}
+
+#error-message {
+    background-color: var(--error-message);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5em;
+    margin-top: 0.5em;
+    box-shadow: var(--shadow-box);
+}
+
+#error-message h2 {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--font-color-2);
+}
+
+/* ============ RESULTS =================*/
+#results.hidden {
+    display: none;
+}
+
+#results {
+    margin-top: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+    box-shadow: var(--shadow-box);
+}
+
+#results .tables {
+    margin-top: 1em;
+    display: flex;
+    flex-direction: row;
+    gap: 14em;
+    justify-content: center;
+    box-shadow: var(--shadow-box);
+}
+
+#main-table,
+#secundary-table {
+    margin: 1em;
+    padding: 1em 1em;
+    text-align: center;
+}
+
+#main-table thead,
+#secundary-table thead {
+    background: var(--background-color-1);
+    color: white;
+}
+
+#main-table th,
+#secundary-table th {
+    padding: 0.5em 1em;
+    text-align: center;
+    font-weight: bold;
+}
+
+#main-table thead tr:nth-child(1) th,
+#secundary-table thead tr:nth-child(1) th {
+    padding: 0.5em 1em;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2em;
+    border-top-left-radius: 1em;
+    border-top-right-radius: 1em;
+}
+
+#main-table tbody tr:nth-child(odd),
+#secundary-table tbody tr:nth-child(odd) {
+    background-color: var(--table-body-odd-color);
+    color: black;
+}
+
+#main-table tbody tr:nth-child(even),
+#secundary-table tbody tr:nth-child(even) {
+    background-color: var(--table-body-even-color);
+    color: black;
+}
+
+#main-table tbody tr:last-child,
+#secundary-table tbody tr:last-child {
+    border-bottom-right-radius: 1em;
+    border-bottom-left-radius: 1em;
+}
+
+#main-table td,
+#secundary-table td {
+    padding: 0.5em 3em;
+    text-align: center;
+}
+
+#main-table td:nth-child(2),
+#secundary-table td:nth-child(2) {
+    padding: 0.5em 3em;
+    text-align: center;
+}
+
+/* ========= STATISTICS DIV =============*/
+#results .statistics {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 1em 3em;
+}
+
+#results .statistics p {
+    padding: 0;
+    margin: 0;
+}
+
+#results .statistics .number {
+    font-weight: bold;
+}
+
+/* ========== LOADING DATA ==============*/
+
+#loading-image {
+    display: none;
+}
+
+#loading-image.show {
+    position: relative;
+    display: flex;
+    height: 400px;
+    width: 100%;
+    margin: 5px;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    background: var(--background-body);
+    box-shadow: 0 5px 30px rgba(0,0,0,0.30);
+}
+
+#loading-image.show .loader {
+    position: absolute;
+    top: 20%;
+    padding: 0;
+    margin: 0;
+}
+
+#loading-image.show .loader .text-string {
+    position: absolute;
+    width: 10em;
+    top: 140%;
+    left: 50%;
+    transform: translateX(-32%);
+    font-size: 1.5em;
+    font-weight: bold;
+    color: rgb(239, 19, 19);
+}
+
+#loading-image.show .loader .text-string b {
+    position: absolute;
+    width: 30em;
+    top: 140%;
+    left: 17%;
+    transform: translateX(-32%);
+    font-size: 0.65em;
+    font-style: italic;
+    color: var(--loader-font-color);
+}
+
+/* =========== DYNAMIC CHANGES ============*/
+.invalid-data {
+    border: 2px red solid;
+}
