@@ -13,6 +13,7 @@ import {
 } from './functions.js'
 
 
+
 // Web site app information
 const appMetadata = {
     name: "Frequency Duration",
@@ -24,6 +25,7 @@ const appMetadata = {
         website: "https://www.mvs-wc.usace.army.mil/"
     }
 }
+
 
 
 // General Const Elements
