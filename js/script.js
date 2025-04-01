@@ -111,7 +111,7 @@ if (isMaintenance){
         
             let setCategory = "Basins"; 
         
-            //let office = "MVS";
+            let office = "MVS";
             //let type = "no idea";
         
             // Get the current date and time, and compute a "look-back" time for historical data
@@ -120,13 +120,14 @@ if (isMaintenance){
         
             let setBaseUrl = null;
             if (cda === "internal") {
-                setBaseUrl = `https://coe-${officeName.toLowerCase()}uwa04${officeName.toLowerCase()}.${officeName.toLowerCase()}.usace.army.mil:8243/${officeName.toLowerCase()}-data/`;
+                setBaseUrl = `https://coe-${office.toLowerCase()}uwa04${office.toLowerCase()}.${office.toLowerCase()}.usace.army.mil:8243/${office.toLowerCase()}-data/`;
             } else if (cda === "public") {
                 setBaseUrl = `https://cwms-data.usace.army.mil/cwms-data/`;
             }
         
             // Define the URL to fetch location groups based on category
-            const categoryApiUrl = setBaseUrl + `location/group?office=${officeName}&include-assigned=false&location-category-like=${setCategory}`;
+            // const categoryApiUrl = setBaseUrl + `location/group?office=${office}&include-assigned=false&location-category-like=${setCategory}`;
+            const categoryApiUrl = setBaseUrl + `location/group?office=${office}&group-office-id=${office}&category-office-id=${office}&category-id=${setCategory}`;
         
             // Initialize maps to store metadata and time-series ID (TSID) data for various parameters
             const metadataMap = new Map();
