@@ -357,6 +357,10 @@
     font-size: 1em;
 }
 
+#compute-pdf-btn.hidden {
+    display: none;
+}
+
 /* ============ CHECK BOX ================*/
 input[type="checkbox"] {
     cursor: pointer;

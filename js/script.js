@@ -31,6 +31,7 @@ const appMetadata = {
 // General Const Elements
 const basinName = document.getElementById('basinCombobox'),
       gageName = document.getElementById('gageCombobox'),
+      officeNameDropdown = document.getElementById('officeCombobox'),
       beginDate = document.getElementById('begin-input'),
       endDate = document.getElementById('end-input'),
       PORBeginDate = document.querySelector('#info-table .por-start'),
@@ -73,7 +74,6 @@ const groupIntervalTextbox = document.getElementById('group-interval-txbox'),
 
 
 let params = new URLSearchParams(window.location.search);
-const officeName = params.get("office") ? params.get("office").toUpperCase() : "MVS";
 const cda = params.get("cda") ? params.get("cda") : "internal";
 const conlog = params.get("log") ? params.get("log") : "false";
 let isDeveloper = params.get("developer") ? params.get("developer").toLowerCase() : null;
@@ -106,12 +106,76 @@ if (isMaintenance){
     //     darkModeCheckbox.checked = userData.darkMode;
     // }
 
-    try{
-        document.addEventListener('DOMContentLoaded', async function () {
-        
+}
+
+// Add function to popup window button
+popupWindowBtn.addEventListener('click', blurBackground);
+
+initialize();
+
+/**============= Main functions when data is retrieved ================**/
+// Initilize page
+function initialize() {
+
+    consoleLog ? console.log("Initialize Data: ", data) : null;
+
+    // Add dark mode functionality
+    darkModeCheckbox.addEventListener('click', function() {
+        document.getElementById('content-body').classList.toggle('dark');
+        document.getElementById('page-container').classList.toggle('dark');
+    });
+
+    let offices = [
+        "MVS", "CERL", "CHL",  "CPC",  "CRREL","CWMS", "EL",   "ERD",  "GSL",  "HEC",
+        "HQ",   "ITL",  "IWR",  "LCRA", "LRB",  "LRC",  "LRD",  "LRDG", "LRDO",
+        "LRE",  "LRH",  "LRL",  "LRN",  "LRP",  "MVD",  "MVK",  "MVM",  "MVN",
+        "MVP",  "MVR",  "MVS",  "NAB",  "NAD",  "NAE",  "NAN",  "NAO",  "NAP",
+        "NDC",  "NWD",  "NWDM", "NWDP", "NWK",  "NWO",  "NWP",  "NWS",  "NWW",
+        "POA",  "POD",  "POH",  "SAC",  "SAD",  "SAJ",  "SAM",  "SAS",  "SAW",
+        "SPA",  "SPD",  "SPK",  "SPL",  "SPN",  "SWD",  "SWF",  "SWG",  "SWL",
+        "SWT",  "TEC",  "WCSC", "WPC"
+    ]
+
+    // Add office name to dropdown list
+    offices.forEach((item) => {
+        let option = document.createElement('option');
+
+        option.value = item;
+        option.textContent = item;
+
+        officeNameDropdown.append(option);
+    });  
+
+    let selectOfficeOption = document.createElement('option');
+    selectOfficeOption.value = "Select Office";
+    selectOfficeOption.text = "Select Office";
+
+    officeNameDropdown.insertBefore(selectOfficeOption, officeNameDropdown.firstChild);
+    officeNameDropdown.selectedIndex = 0;  
+
+    gageName.disabled = true;
+    basinName.disabled = true;
+
+    officeNameDropdown.addEventListener('change', async function() {
+
+        try{
+            
+            loadingPageData();
+
+            if (!haveClass(errorMessageDiv, 'hidden')){
+                errorMessageDiv.classList.add('hidden');
+            }
+
+            // Disable all elements
+            basinName.disabled = true;
+            gageName.disabled = true;
+            beginDate.disabled = true;
+            endDate.disabled = true;
+            computeHTMLBtn.disabled = true;
+
             let setCategory = "Basins"; 
         
-            let office = "MVS";
+            let officeName = officeNameDropdown.value;
             //let type = "no idea";
         
             // Get the current date and time, and compute a "look-back" time for historical data
@@ -120,14 +184,16 @@ if (isMaintenance){
         
             let setBaseUrl = null;
             if (cda === "internal") {
-                setBaseUrl = `https://coe-${office.toLowerCase()}uwa04${office.toLowerCase()}.${office.toLowerCase()}.usace.army.mil:8243/${office.toLowerCase()}-data/`;
+                setBaseUrl = `https://coe-${officeName.toLowerCase()}uwa04${officeName.toLowerCase()}.${officeName.toLowerCase()}.usace.army.mil:8243/${officeName.toLowerCase()}-data/`;
             } else if (cda === "public") {
                 setBaseUrl = `https://cwms-data.usace.army.mil/cwms-data/`;
             }
         
             // Define the URL to fetch location groups based on category
             // const categoryApiUrl = setBaseUrl + `location/group?office=${office}&include-assigned=false&location-category-like=${setCategory}`;
-            const categoryApiUrl = setBaseUrl + `location/group?office=${office}&group-office-id=${office}&category-office-id=${office}&category-id=${setCategory}`;
+            const categoryApiUrl = setBaseUrl + `location/group?office=${officeName}&group-office-id=${officeName}&category-office-id=${officeName}&category-id=${setCategory}`;
+
+            console.log({categoryApiUrl});
         
             // Initialize maps to store metadata and time-series ID (TSID) data for various parameters
             const metadataMap = new Map();
@@ -165,6 +231,8 @@ if (isMaintenance){
                     const targetCategory = { "office-id": officeName, "id": setCategory };
                     const filteredArray = filterByLocationCategory(data, targetCategory);
                     const basins = filteredArray.map(item => item.id);
+
+                    console.log(filteredArray)
         
                     if (basins.length === 0) {
                         console.warn('No basins found for the given category.');
@@ -467,7 +535,7 @@ if (isMaintenance){
                                         return timeSeries.map((series, index) => {
                                             const tsid = series['timeseries-id'];
                                             const timeSeriesDataApiUrl = setBaseUrl + `timeseries?name=${tsid}&begin=${lookBackHours.toISOString()}&end=${currentDateTime.toISOString()}&office=${officeName}`;
-                                           
+                                            
         
                                             return fetch(timeSeriesDataApiUrl, {
                                                 method: 'GET',
@@ -638,11 +706,11 @@ if (isMaintenance){
         
                         })
                         .then(() => {
-         
+            
                             // Step 1: Filter out locations where 'attribute' ends with '.1'
                             combinedData.forEach((dataObj, index) => {
                                 // console.log(`Processing dataObj at index ${index}:`, dataObj['assigned-locations']);
-         
+            
                                 // Filter out locations with 'attribute' ending in '.1'
                                 dataObj['assigned-locations'] = dataObj['assigned-locations'].filter(location => {
                                     const attribute = location['attribute'].toString();
@@ -652,25 +720,25 @@ if (isMaintenance){
                                     }
                                     return true; // Keep the location
                                 });
-         
+            
                                 // console.log(`Updated assigned-locations for index ${index}:`, dataObj['assigned-locations']);
                             });
-         
-         
+            
+            
                             // Step 2: Filter out locations where 'location-id' doesn't match owner's 'assigned-locations'
                             combinedData.forEach(dataGroup => {
                                 // Iterate over each assigned-location in the dataGroup
                                 let locations = dataGroup['assigned-locations'];
-         
+            
                                 // Loop through the locations array in reverse to safely remove items
                                 for (let i = locations.length - 1; i >= 0; i--) {
                                     let location = locations[i];
-         
+            
                                     // Find if the current location-id exists in owner's assigned-locations
                                     let matchingOwnerLocation = location['owner']['assigned-locations'].some(ownerLoc => {
                                         return ownerLoc['location-id'] === location['location-id'];
                                     });
-         
+            
                                     // If no match, remove the location
                                     if (!matchingOwnerLocation) {
                                         locations.splice(i, 1);
@@ -679,7 +747,7 @@ if (isMaintenance){
                             });
         
                             //loadingIndicator.style.display = 'none';
-                            initialize(combinedData);
+                            getDataToInitialize(combinedData);
         
         // =======================================================================================================================================
                         })
@@ -695,6 +763,21 @@ if (isMaintenance){
                     popupMessage("error", "There was an error retrieving the data.<br>See the console log for more information.");
                     popupWindowBtn.click();
                     loadingPageData();
+                    gageName.innerHTML = '';
+                    basinName.innerHTML = '';
+                    gageName.disabled = true;
+                    basinName.disabled = true;
+                    beginDate.disabled = true;
+                    endDate.disabled = true;
+                    if(!haveClass(separatorDiv,'hidden')){
+                        separatorDiv.classList.add('hidden');
+                    }
+                    if(!haveClass(settingDiv,'hidden')){
+                        settingDiv.classList.add('hidden');
+                    }
+                    if(!haveClass(resultDiv,'hidden')){
+                        resultDiv.classList.add('hidden');
+                    }
                 });
         
             function filterByLocationCategory(array, setCategory) {
@@ -1263,32 +1346,18 @@ if (isMaintenance){
                     table.appendChild(dataRow);
                 }
             }
-        });
+    
+        } catch (error){
+            console.error(error);
+            errorMessageDiv.classList.add('show');
+            loadingDiv.classList.remove('show');
+        }
 
-    } catch (error){
-        console.error(error);
-        errorMessageDiv.classList.add('show');
-        loadingDiv.classList.remove('show');
-    }
-
+    });
+    
 }
 
-// Add function to popup window button
-popupWindowBtn.addEventListener('click', blurBackground);
-
-loadingPageData();
-
-/**============= Main functions when data is retrieved ================**/
-// Initilize page
-function initialize(data) {
-
-    consoleLog ? console.log("Initialize Data: ", data) : null;
-
-    // Add dark mode functionality
-    darkModeCheckbox.addEventListener('click', function() {
-        document.getElementById('content-body').classList.toggle('dark');
-        document.getElementById('page-container').classList.toggle('dark');
-    });
+function getDataToInitialize(data) {
 
     // Add functions to checkbox
     manualBoundCheckbox.addEventListener('click', manualBoxChecked);
@@ -1298,6 +1367,12 @@ function initialize(data) {
     singleDayCheckbox.addEventListener('click', singleDayBoxChecked);
     singleMonthCheckbox.addEventListener('click', singleMonthBoxChecked);
     specificTimeWindowCheckbox.addEventListener('click', specificTimeWindowBoxChecked);
+
+    // Enable all elements
+    basinName.disabled = false;
+    gageName.disabled = false;
+    beginDate.disabled = false;
+    endDate.disabled = false;
 
     // Add function to check for valid data
     groupIntervalTextbox.addEventListener('change', () => {
@@ -1631,7 +1706,7 @@ function initialize(data) {
             let endValue = formatString('end date', endDate.value); // YYYY-MM-DD
 
             // Create the URL to get the data
-            let stageUrl = createUrl(domain,timeSeries,datmanName,officeName,beginValue,endValue,timeZone)
+            let stageUrl = createUrl(domain,timeSeries,datmanName,officeNameDropdown.value,beginValue,endValue,timeZone)
 
             let pageSize = 500000;
 
@@ -1673,7 +1748,7 @@ function initialize(data) {
     computePDFBtn.addEventListener('click', function() {
         computePDFBtn.textContent = "Coming Soon...";
     });
-    
+
 }
 
 // Main function
